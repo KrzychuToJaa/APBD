@@ -7,12 +7,12 @@
 WITH city_department AS (
     SELECT l.city, COUNT(d.department_id) AS d_count
     FROM locations AS l
-    JOIN departments AS d ON l.location_id = d.location_id
-    GROUP BY l.country_id, l.city
+    LEFT JOIN departments AS d ON l.location_id = d.location_id
+    GROUP BY l.city
 )
 SELECT city
 FROM city_department
 WHERE d_count > (
-    SELECT AVG(d_count) 
+    SELECT AVG(d_count * 1.0) 
     FROM city_department
 );
