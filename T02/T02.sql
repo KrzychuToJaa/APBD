@@ -1,3 +1,9 @@
+-- Krzysztof Kata 254776
+
+
+
+-- 6. Wyświetl nazwy miast, w których swoją siedzibę ma więcej departamentów
+-- niż wynosi średnia liczba departamentów we wszystkich miastach. W rozwiązaniu wykorzystaj klauzulę with.
 WITH city_department AS (
     SELECT l.city, COUNT(d.department_id) AS d_count
     FROM locations AS l
