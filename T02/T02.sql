@@ -10,9 +10,9 @@ WITH city_department AS (
     LEFT JOIN departments AS d ON l.location_id = d.location_id
     GROUP BY l.city
 )
-SELECT city
+ SELECT city
 FROM city_department
 WHERE d_count > (
-    SELECT AVG(d_count * 1.0) 
+    SELECT AVG(d_count)
     FROM city_department
-);
+); 
