@@ -1,3 +1,5 @@
+Zadanie 1 Jakub Żmijowski 254919
+
 1. Utwórz nową tabelę dotyczącą odwiedzających firmę o nazwie visitors, która będzie zawierać wymienione pola:
 – visitor_id – klucz główny automatycznie numerowany od 100 co 10,
 – employee_id – klucz obcy do tabeli pracowników odwołujący się do danych pracownika odpowiedzialnego za odwiedzających,
@@ -14,7 +16,7 @@ Dodatkowo zadbaj o:
 Wersja SQL Server:
 ```sql
 CREATE TABLE visitors (
-    visitor_id INT IDENTITY(100, 10) PRIMARY KEY,
+    visitor_id NUMERIC(6) IDENTITY(100, 10) PRIMARY KEY,
     employee_id INT NOT NULL,
     company VARCHAR(255),
     people_number INT,
