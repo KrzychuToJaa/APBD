@@ -16,8 +16,8 @@ Dodatkowo zadbaj o:
 Wersja SQL Server:
 ```sql
 CREATE TABLE visitors (
-    visitor_id NUMERIC(6) IDENTITY(100, 10) PRIMARY KEY,
-    employee_id INT NOT NULL,
+    visitor_id int IDENTITY(100, 10) PRIMARY KEY,
+    employee_id NUMERIC(6) NOT NULL,
     company VARCHAR(255),
     people_number INT,
     parking BIT,
@@ -32,8 +32,8 @@ CREATE TABLE visitors (
 Wersja PostgreSQL:
 ```sql
 CREATE TABLE visitors (
-    visitor_id INT GENERATED ALWAYS AS IDENTITY (START WITH 100 INCREMENT BY 10) PRIMARY KEY,
-    employee_id INT NOT NULL,
+    visitor_id int GENERATED ALWAYS AS IDENTITY (START WITH 100 INCREMENT BY 10) PRIMARY KEY,
+    employee_id NUMERIC(6) NOT NULL,
     company VARCHAR(255),
     people_number INT,
     parking BOOLEAN,
