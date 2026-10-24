@@ -44,6 +44,7 @@ CREATE TABLE visitors (
     CONSTRAINT Exit_after_enter CHECK (exit_datetime > enter_datetime AND exit_datetime <= CURRENT_TIMESTAMP)
 );
 ```
+![Wynik zapytania 1s](wyniki/1sqlserver.png)
 ![Wynik zapytania 1](wyniki/1postgre.png)
 
 
@@ -75,6 +76,7 @@ VALUES
     TO_TIMESTAMP('13/10/2026 11:00:00', 'DD/MM/YYYY HH24:MI:SS') + INTERVAL '1 hour 30 minutes'
 );
 ```
+![Wynik zapytania 2s](wyniki/2sqlserver.png)
 ![Wynik zapytania 2](wyniki/2postgre.png)
 
 3. Usuń pole parking z tabeli odwiedzających.
@@ -82,6 +84,7 @@ VALUES
 ```sql
 ALTER TABLE visitors DROP COLUMN parking;
 ```
+![Wynik zapytania 3s](wyniki/3sqlserver.png)
 ![Wynik zapytania 3](wyniki/3postgre.png)
 
 4. Przypisz odwiedzających z firmy KPMG do pracownika Johna Chena, który rzeczywiście uczestniczył w tym spotkaniu.
@@ -90,6 +93,7 @@ ALTER TABLE visitors DROP COLUMN parking;
 UPDATE visitors SET employee_id = (SELECT employee_id FROM employees WHERE first_name LIKE 'John' AND last_name LIKE 'Chen')
 WHERE company LIKE 'KPMG';
 ```
+![Wynik zapytania 4s](wyniki/4sqlserver.png)
 ![Wynik zapytania 4](wyniki/4postgre.png)
 
 
@@ -99,6 +103,7 @@ WHERE company LIKE 'KPMG';
 DELETE FROM visitors WHERE employee_id = (SELECT employee_id FROM employees 
 WHERE first_name LIKE 'Daniel' AND last_name LIKE 'Faviet');
 ```
+![Wynik zapytania 5s](wyniki/5sqlserver.png)
 ![Wynik zapytania 5](wyniki/5postgre.png)
 
 
@@ -107,4 +112,5 @@ WHERE first_name LIKE 'Daniel' AND last_name LIKE 'Faviet');
 ```sql
 DROP TABLE visitors;
 ```
-![Wynik zapytania 5](wyniki/5postgre.png)
+![Wynik zapytania 6s](wyniki/6sqlserver.png)
+![Wynik zapytania 6](wyniki/6postgre.png)
