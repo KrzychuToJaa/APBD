@@ -1,0 +1,3 @@
+Ma zawierać polecenia (tekst)
+Kod w SQL i pgSQL (tekst) - lepiej kod uniwersalny
+Zrzut ekranu z rezultatów (gdyby zwracał 125 rekordów to pierwsze 5 i ostatnie 5) (oba systemy)
