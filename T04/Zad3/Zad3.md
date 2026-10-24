@@ -1,3 +1,5 @@
+Krzysztof Kata 254776
+
 1. Wyświetl imiona i nazwiska menedżerów Diany Lorentz zgodnie z hierarchią w firmie. Do każdego takiego pracownika dopisz jego poziom. Listę pracowników rozpocznij od Diany Lorentz. W rozwiązaniu wykorzystaj rekurencję, klauzulę with oraz operator sumy zbiorów.
 
 Oczekiwany wynik:
