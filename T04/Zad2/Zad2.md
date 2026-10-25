@@ -19,7 +19,7 @@ Zadanie 2 Patryk Nagórka 254825
    ```sql
    SELECT DISTINCT e.first_name, e.last_name, (e.salary - AVG(em.salary)) AS roznica FROM employees e 
    JOIN employees em ON e.employee_id = em.manager_id
-   GROUP BY  e.first_name, e.last_name, e.salary
+   GROUP BY  e.employee_id, e.first_name, e.last_name, e.salary
    ORDER BY  e.first_name;
    ```
    ![Wynik zapytania 2](wynikiZDJ/Podp2.png)
