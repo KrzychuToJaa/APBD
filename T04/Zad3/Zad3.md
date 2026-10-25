@@ -31,8 +31,8 @@ SELECT employee_level, first_name, last_name
 FROM chierarchia
 ORDER BY employee_level
 
---UNION ALL jest wymagane w konstrukcji z rekurencją w SQL Server
 ```
+![Wynik zapytania SQL Server](3sqlserver.png)
 
 Wersja PostgreSQL:
 ```sql
@@ -53,5 +53,5 @@ SELECT employee_level, first_name, last_name
 FROM chierarchia
 ORDER BY employee_level
 
---RECURSIVE jest wymagane w konstrukcach z rekurencją w PostgreSQL
 ```
+![Wynik zapytania PostgreSQL](3postgresql.png)
