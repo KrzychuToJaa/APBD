@@ -14,6 +14,8 @@ ORDER BY d.department_name;
 ```
 
 ![Wynik zapytania 1](wynikiZDJ/Podp1.png)
+![Wynik zapytania 1s](wynikiZDJ/MSPodp1.png)
+
 
 ### 2. Dla każdego menedżera wyświetl jego imię i nazwisko oraz różnicę pomiędzy jego wynagrodzeniem a średnim wynagrodzeniem pracowników bezpośrednio mu podlegających.
 
@@ -27,6 +29,8 @@ ORDER BY  e.first_name;
 ```
 
 ![Wynik zapytania 2](wynikiZDJ/Podp2.png)
+![Wynik zapytania 2s](wynikiZDJ/MSPodp2.png)
+
 
 ### 3. Wyświetl nazwy miast oraz ich kody lokalizacji (nazwij tę kolumnę code) w postaci 00000_KKMMM, gdzie:
 
@@ -53,6 +57,8 @@ WHERE LEN(l.postal_code) = 5 AND l.postal_code NOT LIKE '%[A-Z]%';
 ```
 
 ![Wynik zapytania 3](wynikiZDJ/Podp3.png)
+![Wynik zapytania 3s](wynikiZDJ/MSPodp3.png)
+
 
 ### 4. Wyświetl nazwy departamentów, w których zatrudnionych jest więcej pracowników niż wynosi średnia liczba pracowników we wszystkich departamentach.
 
@@ -72,6 +78,8 @@ WHERE e_count >
 ```
 
 ![Wynik zapytania 4](wynikiZDJ/Podp4.png)
+![Wynik zapytania 4s](wynikiZDJ/MSPodp4.png)
+
 
 ### 5. Dla każdego pracownika wyświetl jego imię i nazwisko, nazwy jego stanowisk oraz informację o tym, które z nich jest aktualne:
 
@@ -95,5 +103,9 @@ ORDER BY last_name, first_name, job_title
 ```
 
 ![Wynik zapytania 5_1](wynikiZDJ/Podp5_1.png)
+![Wynik zapytania 5_1s](wynikiZDJ/MSPodp5_1.png)
+
 
 ![Wynik zapytania 5_2](wynikiZDJ/Podp5_2.png)
+![Wynik zapytania 5_2s](wynikiZDJ/MSPodp5_2.png)
+
