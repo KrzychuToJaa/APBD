@@ -1,6 +1,12 @@
 -- Grupa IAS_MK_pn_14:15_03
 -- Członkowie: Krzysztof Kata 254776, Patryk Nagórka 254825, Jakub Żmijowski 254919
 
+-- 1. Dla każdego pracownika, wyświetl jego imię, nazwisko oraz informację o prowizji:
+-- – "Brak prowizji" w przypadku, gdy pracownik nie ma podanej prowizji,
+-- – "Nieznana prowizja" w przypadku, gdy prowizja pracownika nie może być porównana względem pozostałych pracowników z tego samego działu,
+-- – "Niska prowizja" w przypadku, gdy iloczyn prowizji i minimalnego wynagrodzenia dla stanowiska pracownika jest mniejszy niż średnie wynagrodzenie wszystkich pracowników z działu tego pracownika pomniejszone o 5000,
+-- – "Wysoka prowizja" w pozostałych przypadkach.
+-- Kolumnę z informacją o prowizji nazwij commission_info. Wynik posortuj według ostatniej informacji. W rozwiązaniu wykorzystaj instrukcję warunkową.
 
 SELECT e.first_name, e.last_name,
     CASE 
