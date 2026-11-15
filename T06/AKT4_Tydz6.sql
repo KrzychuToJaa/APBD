@@ -52,6 +52,12 @@ AFTER DELETE ON locations
 FOR EACH ROW
 EXECUTE FUNCTION deleted_city();
 
-DELETE FROM locations l 
-WHERE l.location_id  
-NOT IN (SELECT d.location_id FROM departments); 
+
+
+-- Usuwanie miast bez siedziby departamentu (PostgreSQL i SQL Server)
+DELETE FROM locations
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM departments AS d
+    WHERE d.location_id = locations.location_id
+);
