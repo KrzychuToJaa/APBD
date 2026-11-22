@@ -65,6 +65,13 @@ $$;
 
 SELECT l_pracownikow('Sales Manager', 'Sales', 'United Kingdom') AS liczba_pracownikow;
 ```
+#### Wyniki
+
+![Wynik 1](Zad1/wynikPGSQL.png)
+
+![Wynik 2](Zad1/wynikSQLServer.png)
+
+
 
 ## Zadanie 2
 
