@@ -14,8 +14,6 @@ Sprawozdanie z APDB
 
 Utwórz funkcję, która zwraca liczbę pracowników zatrudnionych na wskazanym stanowisku, w podanym dziale i kraju. Przekaż nazwę stanowiska, działu i kraju jako parametry. Wywołaj funkcję z argumentami Sales Manager, Sales i United Kingdom.
 
-[Zadanie 1](Zad1/Zadanie_1.sql)
-
 ### SQL Server
 
 ```sql
