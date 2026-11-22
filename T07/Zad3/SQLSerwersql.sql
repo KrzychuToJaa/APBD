@@ -2,9 +2,9 @@ USE HR;
 GO
 
 CREATE OR ALTER PROCEDURE dbo.Zmiana_stanowisk
-    @stare_stanowisko VARCHAR(255),
-    @nowe_stanowisko VARCHAR(255),
-    @kraj VARCHAR(255),
+    @stare_stanowisko VARCHAR(35),
+    @nowe_stanowisko VARCHAR(35),
+    @kraj VARCHAR(40),
     @liczba_zmienionych INT OUTPUT
 AS
 BEGIN
@@ -14,7 +14,7 @@ BEGIN
         @komunikat NVARCHAR(255),
         @stare_job_id VARCHAR(10),
         @nowe_job_id VARCHAR(10),
-        @departament_id NUMERIC(6),
+        @departament_id NUMERIC(4),
         @departament_name VARCHAR(30),
         @liczba_w_dziale INT;
         
@@ -53,11 +53,11 @@ BEGIN
 
     CREATE TABLE #zmienieni (
         employee_id NUMERIC(6),
-        first_name VARCHAR(255),
-        last_name VARCHAR(255),
-        email VARCHAR(255),
-        department_id NUMERIC(6),
-        department_name VARCHAR(50)
+        first_name VARCHAR(20),
+        last_name VARCHAR(25),
+        email VARCHAR(25),
+        department_id NUMERIC(4),
+        department_name VARCHAR(30)
     );
 
     DECLARE department_cursor CURSOR LOCAL FAST_FORWARD FOR

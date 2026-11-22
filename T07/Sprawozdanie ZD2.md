@@ -247,9 +247,9 @@ Uwaga! Na czas wykonywania zadania usuń klucz główny w tabeli job_history. Po
 
 ```sql
 CREATE OR ALTER PROCEDURE dbo.Zmiana_stanowisk
-    @stare_stanowisko VARCHAR(255),
-    @nowe_stanowisko VARCHAR(255),
-    @kraj VARCHAR(255),
+    @stare_stanowisko VARCHAR(35),
+    @nowe_stanowisko VARCHAR(35),
+    @kraj VARCHAR(40),
     @liczba_zmienionych INT OUTPUT
 AS
 BEGIN
@@ -259,7 +259,7 @@ BEGIN
         @komunikat NVARCHAR(255),
         @stare_job_id VARCHAR(10),
         @nowe_job_id VARCHAR(10),
-        @departament_id NUMERIC(6),
+        @departament_id NUMERIC(4),
         @departament_name VARCHAR(30),
         @liczba_w_dziale INT;
         
@@ -298,11 +298,11 @@ BEGIN
 
     CREATE TABLE #zmienieni (
         employee_id NUMERIC(6),
-        first_name VARCHAR(255),
-        last_name VARCHAR(255),
-        email VARCHAR(255),
-        department_id NUMERIC(6),
-        department_name VARCHAR(50)
+        first_name VARCHAR(20),
+        last_name VARCHAR(25),
+        email VARCHAR(25),
+        department_id NUMERIC(4),
+        department_name VARCHAR(30)
     );
 
     DECLARE department_cursor CURSOR LOCAL FAST_FORWARD FOR
@@ -362,12 +362,123 @@ END;
 ### PostgreSQL
 
 ```sql
+CREATE OR REPLACE PROCEDURE zmiana_stanowisk(
+    IN stare_stanowisko VARCHAR,
+    IN nowe_stanowisko VARCHAR,
+    IN kraj VARCHAR,
+    OUT liczba_zmienionych INT,
+    OUT emaile REFCURSOR,
+    OUT departamenty REFCURSOR
+)
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    v_country_id CHAR(2);
+    stare_job_id VARCHAR(10);
+    nowe_job_id VARCHAR(10);
+    departament_id NUMERIC(4);
+    departament_name VARCHAR(30);
+    liczba_w_dziale INT;
+    liczba_zaktualizowanych BIGINT;
+
+    departament_cursor CURSOR FOR
+        SELECT d.department_id, d.department_name FROM departments d
+        JOIN locations l ON l.location_id = d.location_id
+        WHERE l.country_id = v_country_id
+        ORDER BY d.department_id;
+
+BEGIN
+    liczba_zmienionych := 0;
+	emaile := 'wynik_emaile';
+	departamenty := 'wynik_departamenty';
+
+    SELECT c.country_id INTO v_country_id FROM countries c
+    WHERE c.country_name = kraj;
+
+    IF v_country_id IS NULL THEN
+        RAISE EXCEPTION 'Brak kraju % w bazie danych!', kraj;
+    END IF;
+
+    IF NOT EXISTS (
+		SELECT 1 FROM departments d
+        JOIN locations l ON l.location_id = d.location_id
+        WHERE l.country_id = v_country_id
+    ) THEN 
+		RAISE EXCEPTION 'Brak departamentów w kraju %!', kraj;
+    END IF;
+
+    SELECT j.job_id INTO stare_job_id FROM jobs j
+    WHERE j.job_title = stare_stanowisko;
+
+    SELECT j.job_id INTO nowe_job_id FROM jobs j
+    WHERE j.job_title = nowe_stanowisko;
+
+    IF stare_job_id IS NULL OR nowe_job_id IS NULL THEN
+        RAISE EXCEPTION 'Nie ma takiego stanowiska!';
+    END IF;
+
+    CREATE TEMP TABLE zmienieni (
+        employee_id NUMERIC(6),
+        first_name VARCHAR(20),
+        last_name VARCHAR(25),
+        email VARCHAR(25),
+        department_id NUMERIC(4),
+        department_name VARCHAR(30)
+    ) ON COMMIT DROP;
+
+    OPEN departament_cursor;
+
+    LOOP
+        FETCH NEXT FROM departament_cursor
+        INTO departament_id, departament_name;
+
+        EXIT WHEN NOT FOUND;
+
+        liczba_w_dziale := l_pracownikow(stare_stanowisko, departament_name, kraj);
+
+        IF liczba_w_dziale = 0 THEN
+            RAISE WARNING 'Brak pracowników na stanowisku % w departamencie % w kraju %!',
+                stare_stanowisko, departament_name, kraj;
+        ELSE
+            WITH zaktualizowani AS (
+				UPDATE employees e SET job_id = nowe_job_id
+                WHERE e.department_id = departament_id AND e.job_id = stare_job_id
+                RETURNING e.employee_id, e.first_name, e.last_name, e.email, e.department_id
+            )
+            INSERT INTO pg_temp.zmienieni (employee_id, first_name, last_name, email, department_id, department_name)
+            SELECT z.employee_id, z.first_name, z.last_name, z.email, z.department_id, departament_name
+            FROM zaktualizowani z;
+			
+            liczba_zmienionych := liczba_zmienionych + liczba_w_dziale;
+        END IF;
+    END LOOP;
+
+    CLOSE departament_cursor;
+
+    OPEN emaile FOR
+        SELECT z.email FROM pg_temp.zmienieni z
+        ORDER BY z.email;
+
+
+    OPEN departamenty FOR
+        SELECT d.department_name, z.first_name, z.last_name FROM departments d
+        JOIN locations l ON l.location_id = d.location_id
+        JOIN pg_temp.zmienieni z ON z.department_id = d.department_id
+        WHERE l.country_id = v_country_id
+        ORDER BY d.department_name, z.last_name, z.first_name;
+END;
+$$;
 
 ```
 
-### Sprawdzenie działania
+## Sprawdzenie działania
+
+### SQL Server
 
 ```sql
+ALTER TABLE job_history
+DROP CONSTRAINT IF EXISTS jhist_emp_id_st_date_pk;
+
 DECLARE @wynik INT;
 
 EXEC dbo.Zmiana_stanowisk
@@ -399,6 +510,52 @@ EXEC dbo.Zmiana_stanowisk
 PRINT 'Liczba zmodyfikowanych rekordów: ' + CAST(@wynik AS VARCHAR(100));
 ```
 
+### PostgreSQL
+
+```sql
+ALTER TABLE job_history
+DROP CONSTRAINT IF EXISTS jhist_emp_id_st_date_pk;
+
+BEGIN;
+CALL zmiana_stanowisk(
+    'Sales Manager',
+    'Sales Representative',
+    'United Kingdom',
+    NULL,
+    NULL,
+    NULL
+);
+FETCH ALL FROM wynik_emaile;
+FETCH ALL FROM wynik_departamenty;
+COMMIT;
+
+BEGIN;
+CALL zmiana_stanowisk(
+    'Sales Manager',
+    'Sales Representative',
+    'Polska',
+    NULL,
+    NULL,
+    NULL
+);
+FETCH ALL FROM wynik_emaile;
+FETCH ALL FROM wynik_departamenty;
+COMMIT;
+
+BEGIN;
+CALL zmiana_stanowisk(
+    'Sales Manager',
+    'Sales Representative',
+    'Zimbabwe',
+    NULL,
+    NULL,
+    NULL
+);
+FETCH ALL FROM wynik_emaile;
+FETCH ALL FROM wynik_departamenty;
+COMMIT;
+```
+
 #### Wyniki w SQL Server
 
 ![Wyniki Zad3](Zad3/wynikiZdj/screensql1.png)
@@ -410,3 +567,18 @@ PRINT 'Liczba zmodyfikowanych rekordów: ' + CAST(@wynik AS VARCHAR(100));
 ![Błąd 1 Zad3](Zad3/wynikiZdj/screensql4.png)
 
 ![Błąd 2 Zad3](Zad3/wynikiZdj/screensql5.png)
+
+
+#### Wyniki w PostgreSQL
+
+![Ilość postgre](Zad3/wynikiZdj/screenpostgre1.png)
+
+![Komunikat 1 postgre](Zad3/wynikiZdj/screenpostgre2.png)
+
+![Emaile postgre](Zad3/wynikiZdj/screenpostgre3.png)
+
+![Imiona i nazwiska postgre](Zad3/wynikiZdj/screenpostgre4.png)
+
+![Komunikat 2 postgre](Zad3/wynikiZdj/screenpostgre5.png)
+
+![Komunikat 3 postgre](Zad3/wynikiZdj/screenpostgre6.png)
