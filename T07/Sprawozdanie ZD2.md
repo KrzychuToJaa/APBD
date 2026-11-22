@@ -351,7 +351,7 @@ BEGIN
 
     SELECT d.department_name, z.first_name, z.last_name FROM departments d
     JOIN locations l ON l.location_id = d.location_id
-    JOIN #zmienieni z ON z.department_id = d.department_id
+    LEFT JOIN #zmienieni z ON z.department_id = d.department_id
     WHERE l.country_id = @country_id
     ORDER BY d.department_name, z.last_name, z.first_name;
 
@@ -379,7 +379,6 @@ DECLARE
     departament_id NUMERIC(4);
     departament_name VARCHAR(30);
     liczba_w_dziale INT;
-    liczba_zaktualizowanych BIGINT;
 
     departament_cursor CURSOR FOR
         SELECT d.department_id, d.department_name FROM departments d
@@ -463,7 +462,7 @@ BEGIN
     OPEN departamenty FOR
         SELECT d.department_name, z.first_name, z.last_name FROM departments d
         JOIN locations l ON l.location_id = d.location_id
-        JOIN pg_temp.zmienieni z ON z.department_id = d.department_id
+        LEFT JOIN pg_temp.zmienieni z ON z.department_id = d.department_id
         WHERE l.country_id = v_country_id
         ORDER BY d.department_name, z.last_name, z.first_name;
 END;
@@ -478,9 +477,10 @@ $$;
 ```sql
 ALTER TABLE job_history
 DROP CONSTRAINT IF EXISTS jhist_emp_id_st_date_pk;
+```
 
+```sql
 DECLARE @wynik INT;
-
 EXEC dbo.Zmiana_stanowisk
     @stare_stanowisko = 'Sales Manager',
     @nowe_stanowisko  = 'Sales Representative',
@@ -488,9 +488,10 @@ EXEC dbo.Zmiana_stanowisk
     @liczba_zmienionych = @wynik OUTPUT;
 
 PRINT 'Liczba zmodyfikowanych rekordów: ' + CAST(@wynik AS VARCHAR(100));
+```
 
+```sql
 DECLARE @wynik INT;
-
 EXEC dbo.Zmiana_stanowisk
     @stare_stanowisko = 'Sales Manager',
     @nowe_stanowisko  = 'Sales Representative',
@@ -498,9 +499,10 @@ EXEC dbo.Zmiana_stanowisk
     @liczba_zmienionych = @wynik OUTPUT;
 
 PRINT 'Liczba zmodyfikowanych rekordów: ' + CAST(@wynik AS VARCHAR(100));
+```
 
+```sql
 DECLARE @wynik INT;
-
 EXEC dbo.Zmiana_stanowisk
     @stare_stanowisko = 'Sales Manager',
     @nowe_stanowisko  = 'Sales Representative',
@@ -515,7 +517,9 @@ PRINT 'Liczba zmodyfikowanych rekordów: ' + CAST(@wynik AS VARCHAR(100));
 ```sql
 ALTER TABLE job_history
 DROP CONSTRAINT IF EXISTS jhist_emp_id_st_date_pk;
+```
 
+```sql
 BEGIN;
 CALL zmiana_stanowisk(
     'Sales Manager',
@@ -528,7 +532,9 @@ CALL zmiana_stanowisk(
 FETCH ALL FROM wynik_emaile;
 FETCH ALL FROM wynik_departamenty;
 COMMIT;
+```
 
+```sql
 BEGIN;
 CALL zmiana_stanowisk(
     'Sales Manager',
@@ -541,7 +547,9 @@ CALL zmiana_stanowisk(
 FETCH ALL FROM wynik_emaile;
 FETCH ALL FROM wynik_departamenty;
 COMMIT;
+```
 
+```sql
 BEGIN;
 CALL zmiana_stanowisk(
     'Sales Manager',

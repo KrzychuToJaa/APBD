@@ -1,6 +1,3 @@
-USE HR;
-GO
-
 CREATE OR ALTER PROCEDURE dbo.Zmiana_stanowisk
     @stare_stanowisko VARCHAR(35),
     @nowe_stanowisko VARCHAR(35),
@@ -106,10 +103,9 @@ BEGIN
 
     SELECT d.department_name, z.first_name, z.last_name FROM departments d
     JOIN locations l ON l.location_id = d.location_id
-    JOIN #zmienieni z ON z.department_id = d.department_id
+    LEFT JOIN #zmienieni z ON z.department_id = d.department_id
     WHERE l.country_id = @country_id
     ORDER BY d.department_name, z.last_name, z.first_name;
 
     DROP TABLE #zmienieni;
 END;
-GO
